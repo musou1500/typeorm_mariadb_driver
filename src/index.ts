@@ -29,18 +29,18 @@ class User {
     database: "app",
     entities: [User],
     synchronize: true,
-    logging: true,
+    // logging: true,
   });
 
-  await conn.createQueryBuilder().delete().from(User).execute();
-  const user1 = await getManager().save(User, new User("test"));
-  const users = [user1, new User("test")];
+  // await conn.createQueryBuilder().delete().from(User).execute();
+  // const user1 = await getManager().save(User, new User("test"));
+  const users = [new User("test"), new User("test")];
   await getManager().transaction((transactional) =>
     transactional
       .getRepository(User)
       .createQueryBuilder()
       .insert()
-      .orUpdate({ conflict_target: ["name", "id"], overwrite: ["name", "id"] })
+      .orUpdate({ conflict_target: ["id", "name"], overwrite: ["name"] })
       .values(users)
       .updateEntity(true)
       .execute()
